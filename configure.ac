@@ -47,9 +47,10 @@ AC_HAVE_LIBRARY([gflags],[],[AC_MSG_ERROR(
 
 AC_CONFIG_FILES([
  Makefile
+ tests/Makefile
  src/Makefile
  examples/Makefile
- test/Makefile
+ examples/tests/Makefile
 ])
 
 ##########################################################################

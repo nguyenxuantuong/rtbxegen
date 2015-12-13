@@ -15815,7 +15815,7 @@ fi
 ac_cv_lib_gflags=ac_cv_lib_gflags_main
 
 
-ac_config_files="$ac_config_files Makefile src/Makefile examples/Makefile test/Makefile"
+ac_config_files="$ac_config_files Makefile tests/Makefile src/Makefile examples/Makefile examples/tests/Makefile"
 
 
 ##########################################################################
@@ -16961,9 +16961,10 @@ do
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+    "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "examples/Makefile") CONFIG_FILES="$CONFIG_FILES examples/Makefile" ;;
-    "test/Makefile") CONFIG_FILES="$CONFIG_FILES test/Makefile" ;;
+    "examples/tests/Makefile") CONFIG_FILES="$CONFIG_FILES examples/tests/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac
