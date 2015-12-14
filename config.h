@@ -54,19 +54,19 @@
 #define NDEBUG /**/
 
 /* Name of package */
-#define PACKAGE "rtbpack"
+#define PACKAGE "rtbxegen"
 
 /* Define to the address where bug reports for this package should be sent. */
 #define PACKAGE_BUGREPORT "nguy0066@e.ntu.edu.sg"
 
 /* Define to the full name of this package. */
-#define PACKAGE_NAME "rtbpack"
+#define PACKAGE_NAME "rtbxegen"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "rtbpack 0.1"
+#define PACKAGE_STRING "rtbxegen 0.1"
 
 /* Define to the one symbol short name of this package. */
-#define PACKAGE_TARNAME "rtbpack"
+#define PACKAGE_TARNAME "rtbxegen"
 
 /* Define to the home page for this package. */
 #define PACKAGE_URL ""

@@ -10,7 +10,7 @@ void TestRequestHandler::onRequest(std::unique_ptr<proxygen::HTTPMessage> header
 //this will process the request body
 void TestRequestHandler::onBody(std::unique_ptr<folly::IOBuf> body) noexcept {
     //chain is circular; so prependChain will just append to end of the chain; not head of chain
-    if(body_){
+    if (body_) {
         body_->prependChain(std::move(body));
     } else {
         body_ = std::move(body);
@@ -39,9 +39,8 @@ void TestRequestHandler::onEOM() noexcept {
     //just return directly body as the response
     ResponseBuilder(downstream_)
             .status(200, "OK")
-            .header("Content-Type", "text/plain")
             .header("Request-Number", folly::to<std::string>(requestRecorder_->getRequestCount()))
-            .body(std::move(bodyBuf))
+            .body(std::move(body_))
             .sendWithEOM();
 }
 

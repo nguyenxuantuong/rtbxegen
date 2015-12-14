@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([rtbpack], [0.1], [nguy0066@e.ntu.edu.sg])
+AC_INIT([rtbxegen], [0.1], [nguy0066@e.ntu.edu.sg])
 
 AC_CONFIG_SRCDIR([src/EchoServer.cpp],[examples/hello_world.cpp])
 AC_CONFIG_AUX_DIR([build-aux])

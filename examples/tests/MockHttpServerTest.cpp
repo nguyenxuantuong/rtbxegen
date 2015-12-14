@@ -39,6 +39,9 @@ public:
 
         //response handler is mocked from from request handler
         responseHandler = folly::make_unique<MockResponseHandler>(requestHandler);
+
+        //need to set the response handler
+        requestHandler->setResponseHandler(responseHandler.get());
     }
 
     void TearDown() override {
@@ -69,4 +72,35 @@ TEST_F(MockRequestHandlerFixture, OnProperRequestSendResponse) {
 
     EXPECT_EQ("5", response.getHeaders().getSingleOrEmpty("Request-Number"));
     EXPECT_EQ(200, response.getStatusCode());
+}
+
+TEST_F(MockRequestHandlerFixture, ReplaysBodyProperly) {
+    EXPECT_CALL(stats, recordRequest()).WillOnce(Return());
+    EXPECT_CALL(stats, getRequestCount()).WillOnce(Return(5));
+
+    HTTPMessage response;
+    folly::fbstring body;
+
+    EXPECT_CALL(*responseHandler, sendHeaders(_)).WillOnce(
+            DoAll(SaveArg<0>(&response), Return()));
+
+    EXPECT_CALL(*responseHandler, sendBody(_)).WillRepeatedly(
+            DoAll(
+                    Invoke([&] (std::shared_ptr<folly::IOBuf> b) {
+                        body += b->moveToFbString();
+                    }),
+                    Return()));
+
+    EXPECT_CALL(*responseHandler, sendEOM()).WillOnce(Return());
+
+    // Since we know we dont touch request, its ok to pass `nullptr` here.
+    requestHandler->onRequest(nullptr);
+    requestHandler->onBody(folly::IOBuf::copyBuffer("part1"));
+    requestHandler->onBody(folly::IOBuf::copyBuffer("part2"));
+    requestHandler->onEOM();
+    requestHandler->requestComplete();
+
+    EXPECT_EQ("5", response.getHeaders().getSingleOrEmpty("Request-Number"));
+    EXPECT_EQ(200, response.getStatusCode());
+    EXPECT_EQ("part1part2", body);
 }
