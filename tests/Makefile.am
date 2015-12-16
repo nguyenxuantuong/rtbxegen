@@ -14,9 +14,6 @@ libgmockgtest_la_SOURCES = \
 	gmock-1.7.0/gtest/src/gtest-all.cc \
 	gmock-1.7.0/src/gmock-all.cc
 
-# need to declare c++11 feature
-AM_CXXFLAGS = -std=c++11
-
 ACLOCAL_AMFLAGS = -I m4
 
 CPPFLAGS += -Igmock-1.7.0/gtest -Igmock-1.7.0 -Igmock-1.7.0/gtest/include -Igmock-1.7.0/include

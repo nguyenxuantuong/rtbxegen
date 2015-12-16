@@ -1,5 +1,4 @@
-AM_CXXFLAGS = -std=c++11
-AM_CPPFLAGS = -I/home/vagrant/data/proxygen
+SUBDIRS = . exchanges
 
 bin_PROGRAMS = myecho
 myecho_LDADD = -lproxygenhttpserver -lfolly -lglog -lgflags

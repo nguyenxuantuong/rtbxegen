@@ -30,6 +30,13 @@ AM_PROG_LIBTOOL
 # initialize libtool
 LT_INIT
 
+# build with c++11 flag
+AC_SUBST([AM_CXXFLAGS], [-std=c++11])
+
+# TODO: this should be remove but for now; proxygen doesn't install some certain header files to standard header folder
+# which cause error when build
+AC_SUBST([AM_CPPFLAGS], [-I/home/vagrant/data/proxygen])
+
 # Checks for libraries.
 # AC_CHECK_LIB([proxygenhttpserver], [folly], [glog], [gflags], [pthread])
 
@@ -45,10 +52,13 @@ AC_HAVE_LIBRARY([glog],[],[AC_MSG_ERROR(
 AC_HAVE_LIBRARY([gflags],[],[AC_MSG_ERROR(
                 [Please install google-gflags library])])
 
+PKG_CHECK_MODULES([protobuf], [protobuf])
+
 AC_CONFIG_FILES([
  Makefile
  tests/Makefile
  src/Makefile
+ src/exchanges/Makefile
  examples/Makefile
  examples/tests/Makefile
 ])

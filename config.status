@@ -393,7 +393,7 @@ on `(hostname || uname -n) 2>/dev/null | sed 1q`
 "
 
 # Files that config.status was made for.
-config_files=" Makefile tests/Makefile src/Makefile examples/Makefile examples/tests/Makefile"
+config_files=" Makefile tests/Makefile src/Makefile src/exchanges/Makefile examples/Makefile examples/tests/Makefile"
 config_headers=" config.h"
 config_commands=" depfiles libtool"
 
@@ -572,7 +572,7 @@ FGREP='/bin/grep -F'
 LD='/usr/bin/ld -m elf_x86_64'
 NM='/usr/bin/nm -B'
 LN_S='ln -s'
-max_cmd_len='1572864'
+max_cmd_len='3458764513820540925'
 ac_objext='o'
 exeext=''
 lt_unset='unset'
@@ -806,6 +806,7 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
+    "src/exchanges/Makefile") CONFIG_FILES="$CONFIG_FILES src/exchanges/Makefile" ;;
     "examples/Makefile") CONFIG_FILES="$CONFIG_FILES examples/Makefile" ;;
     "examples/tests/Makefile") CONFIG_FILES="$CONFIG_FILES examples/tests/Makefile" ;;
 
@@ -877,6 +878,13 @@ S["am__EXEEXT_FALSE"]=""
 S["am__EXEEXT_TRUE"]="#"
 S["LTLIBOBJS"]=""
 S["LIBOBJS"]=""
+S["protobuf_LIBS"]="-pthread -L/usr/local/lib -lprotobuf -lpthread  "
+S["protobuf_CFLAGS"]="-pthread -I/usr/local/include  "
+S["PKG_CONFIG_LIBDIR"]=""
+S["PKG_CONFIG_PATH"]=""
+S["PKG_CONFIG"]="/usr/bin/pkg-config"
+S["AM_CPPFLAGS"]="-I/home/vagrant/data/proxygen"
+S["AM_CXXFLAGS"]="-std=c++11 -O3"
 S["OTOOL64"]=""
 S["OTOOL"]=""
 S["LIPO"]=""

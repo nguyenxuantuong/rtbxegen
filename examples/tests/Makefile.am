@@ -1,11 +1,5 @@
 SUBDIRS = .
 
-# need to declare c++11 feature
-AM_CXXFLAGS = -std=c++11
-
-# TODO: HACK -- TOBE REMOVE
-AM_CPPFLAGS = -I/home/vagrant/data/proxygen
-
 ACLOCAL_AMFLAGS = -I m4
 
 CPPFLAGS += -I$(top_builddir)/.. -I$(top_builddir)/tests/gmock-1.7.0/gtest -I$(top_builddir)/tests/gmock-1.7.0 -I$(top_builddir)/tests/gmock-1.7.0/gtest/include -I$(top_builddir)/tests/gmock-1.7.0/include
