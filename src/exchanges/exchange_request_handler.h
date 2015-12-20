@@ -34,11 +34,35 @@ public:
     virtual void onBody(std::unique_ptr<folly::IOBuf> body) noexcept;
     virtual void requestComplete() noexcept;
     virtual void onError(proxygen::ProxygenError err) noexcept;
-    virtual void onEOM() noexcept;
+    virtual void onEOM() noexcept = 0;
     virtual void onUpgrade(proxygen::UpgradeProtocol proto) noexcept;
+
+    //some sugar function to return 204, 404
+    virtual void quickResponse(uint16_t statusCode, std::string const statusMsg, std::string const errorMsg) noexcept {
+        //TODO: errorMsg
+        ResponseBuilder(downstream_)
+                .status(statusCode, statusMsg)
+                .sendWithEOM();
+    }
+
+    virtual void quickResponse(uint16_t statusCode, std::string const statusMsg) noexcept {
+        quickResponse(statusCode, statusMsg, "");
+    }
+
+    //callback function
+    typedef std::function<void (std::shared_ptr<folly::dynamic> Auction)> OnAuction;
+
+    OnAuction onNewAuction, onAuctionDone;
+
+    typedef std::function<void (const std::string & channel,
+                                std::shared_ptr<folly::dynamic> auction,
+                                const std::string & message)> OnAuctionError;
+    OnAuctionError onAuctionError;
 
 protected:
     std::unique_ptr<folly::IOBuf> body_; //keeping http payload
+    std::shared_ptr<folly::dynamic> auction; //keeping json-decoded dynamic object for the body
+    std::unique_ptr<proxygen::HTTPMessage> httpMessage; //keeping track http message first sent along
 };
 
 }

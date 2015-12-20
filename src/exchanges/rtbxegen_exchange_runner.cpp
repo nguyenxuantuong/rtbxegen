@@ -1,6 +1,8 @@
 #include "smaato_request_handler.h"
 #include "adx_request_handler.h"
 
+#include <rtbxegen/lib/proxygen/rejection_request_handler.h>
+
 /*
  * Declare some of the default options
  */
@@ -12,6 +14,15 @@ DEFINE_int32(threads, 0, "Number of threads to listen on. Numbers <= 0 "
 DEFINE_bool(allowNameLookUp, true, "Allow host name lookup for HTTP server IP bidding. It's slow operation");
 
 using namespace rtbxegen;
+using namespace std;
+using namespace proxygen;
+using namespace folly;
+
+constexpr unsigned int str2int(const char* str, int h = 0)
+{
+    return !str[h] ? 5381 : (str2int(str, h+1)*33) ^ str[h];
+}
+
 
 /*
  * REQUEST HANDLER FACTORY -- which return specific handler based on the specific HTTP Method / Path
@@ -20,15 +31,67 @@ using namespace rtbxegen;
 class ExchangeRequestHandlerFactory : public RequestHandlerFactory {
 public:
     void onServerStart(folly::EventBase* evb) noexcept override {
+        //initialize exchange callback
     }
 
     void onServerStop() noexcept override {
     }
 
-    RequestHandler* onRequest(RequestHandler*, HTTPMessage*) noexcept override {
-        //pass the instance of request recorder into the real handler
-        return new SmaatoRequestHandler();
+    RequestHandler* onRequest(RequestHandler*, HTTPMessage* httpMessage) noexcept override {
+        std::string method = httpMessage->getMethodString();
+        std::string path = httpMessage->getPath();
+
+        ExchangeRequestHandler* requestHandler = nullptr;
+
+        //exchange handler only accept POST method
+        switch(str2int((path + "-" + method).c_str())) {
+            case str2int("/adx-POST"):
+                requestHandler = new AdxRequestHandler();
+                break;
+            case str2int("/smaato-POST"):
+                requestHandler = new SmaatoRequestHandler();
+                break;
+            default:
+                //by default; return 404; should it be 204 instead
+                return new RejectionRequestHandler();
+                break;
+        }
+
+        //attach some of the callback function
+        requestHandler->onAuctionDone = [=](std::shared_ptr<folly::dynamic> auction){
+            this->onAuctionDone(auction);
+        };
+
+        requestHandler->onNewAuction = [=](std::shared_ptr<folly::dynamic> auction) {
+            this->onNewAuction(auction);
+        };
+
+        //callback when receiving error
+        requestHandler->onAuctionError = [=](const std::string & channel,
+                                             std::shared_ptr<folly::dynamic> auction,
+                                             const std::string & message) {
+            this->onAuctionError(channel, auction, message);
+        };
+
+        return requestHandler;
     }
+
+    /** We got a new request from exchange . */
+    void onNewAuction(std::shared_ptr<folly::dynamic> auction) {
+        //LOG(INFO) << "REQUEST/AUCTION:" << folly::toPrettyJson(*auction) << endl;
+    };
+
+    /** An auction finished, exchange send back the response. */
+    void onAuctionDone(std::shared_ptr<folly::dynamic> auction) {
+
+    };
+
+    /** An auction error, error happen during the way */
+    void onAuctionError(const std::string & channel,
+                        std::shared_ptr<folly::dynamic> auction,
+                        const std::string & message) {
+
+    };
 private:
 
 };

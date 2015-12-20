@@ -11,6 +11,7 @@ namespace rtbxegen {
 
     void ExchangeRequestHandler::onRequest(std::unique_ptr<proxygen::HTTPMessage> headers) noexcept {
         //TODO: might want to log the request -- sending to graphite, etc...
+        httpMessage = std::move(headers);
     }
 
     //this will process the request body
@@ -20,13 +21,6 @@ namespace rtbxegen {
         } else {
             body_ = std::move(body);
         }
-    }
-
-    void ExchangeRequestHandler::onEOM() noexcept {
-        //TODO: send 204 here
-        ResponseBuilder(downstream_)
-                .status(204, "No Content")
-                .sendWithEOM();
     }
 
     void ExchangeRequestHandler::onUpgrade(UpgradeProtocol protocol) noexcept { }

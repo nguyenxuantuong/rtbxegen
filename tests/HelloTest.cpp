@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <functional>
 
 #include <gtest/gtest.h>
 #include <folly/json.h>
@@ -95,4 +96,39 @@ TEST(Hello, TestIOBuf) {
     EXPECT_EQ(parseJson(bufString1), complexObj);
 
     //TODO: other method to taking ownership goes here
+}
+
+struct Number {
+    Number(int val) : val_(val) {}
+
+    //const get() function; not updating the class member
+    int plus(int num) const {
+        return val_ + num;
+    }
+
+    int val_;
+};
+
+
+TEST(Hello, StdFunction){
+    std::function<int(const Number&, int)> sumF = &Number::plus;
+    const Number number(1);
+    EXPECT_EQ(sumF(number, 1), 2);
+
+    int n = 1;
+
+    //capture external parameters / variable
+    std::function<int(int)> sumF2 = [&](int a){
+        return n + a;
+    };
+
+    EXPECT_EQ(sumF2(1), 2);
+
+    using std::placeholders::_1;
+    std::function<int(int)> sumF3 = std::bind(&Number::plus, &number, _1);
+    EXPECT_EQ(sumF3(1), 2);
+    EXPECT_EQ(std::bind(&Number::plus, &number, _1)(1), 2);
+
+    std::function<int(int)> sumF4 = std::bind(&Number::plus, number, _1);
+    EXPECT_EQ(sumF4(1), 2);
 }

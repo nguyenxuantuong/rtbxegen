@@ -4,7 +4,7 @@
 AC_PREREQ([2.69])
 AC_INIT([rtbxegen], [0.1], [nguy0066@e.ntu.edu.sg])
 
-AC_CONFIG_SRCDIR([src/EchoServer.cpp],[examples/hello_world.cpp])
+AC_CONFIG_SRCDIR([src/exchanges/rtbxegen_exchange_runner.cpp],[examples/hello_world.cpp])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS([config.h])
@@ -35,7 +35,8 @@ AC_SUBST([AM_CXXFLAGS], [-std=c++11])
 
 # TODO: this should be remove but for now; proxygen doesn't install some certain header files to standard header folder
 # which cause error when build
-AC_SUBST([AM_CPPFLAGS], [-I/home/vagrant/data/proxygen])
+# GLOBAL_INCLUDE_DIR="-I/home/vagrant/data/proxygen -I$(top_srcdir)"
+AC_SUBST([AM_CPPFLAGS], ["-I/home/vagrant/data/proxygen -I/home/vagrant/data/rtbxegen"])
 
 # Checks for libraries.
 # AC_CHECK_LIB([proxygenhttpserver], [folly], [glog], [gflags], [pthread])
@@ -56,6 +57,10 @@ PKG_CHECK_MODULES([protobuf], [protobuf])
 
 AC_CONFIG_FILES([
  Makefile
+ lib/Makefile
+ lib/proxygen/Makefile
+ lib/openrtb/Makefile
+ lib/openrtb/tests/Makefile
  tests/Makefile
  src/Makefile
  src/exchanges/Makefile

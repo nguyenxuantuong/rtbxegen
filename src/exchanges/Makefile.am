@@ -10,5 +10,7 @@ rtbxegen_exchange_runner_SOURCES = \
     smaato_request_handler.cpp \
     rtbxegen_exchange_runner.cpp
 
-rtbxegen_exchange_runner_LDADD = -lproxygenhttpserver -lfolly -lglog -lgflags -lprotobuf
+rtbxegen_exchange_runner_LDADD = -lproxygenhttpserver -lfolly -lglog -lgflags -lprotobuf \
+    ../../lib/proxygen/librtbproxygen.la
+
 rtbxegen_exchange_runner_LDFLAGS = -pthread

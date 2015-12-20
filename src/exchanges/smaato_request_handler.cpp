@@ -20,6 +20,14 @@ namespace rtbxegen {
     }
 
     void SmaatoRequestHandler::onEOM() noexcept {
+        //try to parse the body
+        auction = std::make_shared<folly::dynamic>(folly::parseJson(body_->moveToFbString()));
+
+        //send new auction via callback function
+        if(onNewAuction){
+            onNewAuction(auction);
+        }
+
         std::unique_ptr<folly::IOBuf> bodyBuf;
 
         dynamic complexObj = dynamic::object("success", "true");
@@ -37,6 +45,7 @@ namespace rtbxegen {
                 .sendWithEOM();
     }
 
+    //this will be called when response is fully sent
     void SmaatoRequestHandler::requestComplete() noexcept {
         delete this;
     }

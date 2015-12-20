@@ -21,6 +21,7 @@ namespace rtbxegen {
 
     void OpenRtbRequestHandler::onEOM() noexcept {
         //TODO: check if there is such an default response
+
     }
 
     void OpenRtbRequestHandler::requestComplete() noexcept {

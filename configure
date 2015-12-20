@@ -595,7 +595,7 @@ PACKAGE_STRING='rtbxegen 0.1'
 PACKAGE_BUGREPORT='nguy0066@e.ntu.edu.sg'
 PACKAGE_URL=''
 
-ac_unique_file="src/EchoServer.cpp"
+ac_unique_file="src/exchanges/rtbxegen_exchange_runner.cpp"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>
@@ -15747,7 +15747,8 @@ AM_CXXFLAGS=-std=c++11
 
 # TODO: this should be remove but for now; proxygen doesn't install some certain header files to standard header folder
 # which cause error when build
-AM_CPPFLAGS=-I/home/vagrant/data/proxygen
+# GLOBAL_INCLUDE_DIR="-I/home/vagrant/data/proxygen -I$(top_srcdir)"
+AM_CPPFLAGS="-I/home/vagrant/data/proxygen -I/home/vagrant/data/rtbxegen"
 
 
 # Checks for libraries.
@@ -16057,7 +16058,7 @@ $as_echo "yes" >&6; }
 
 fi
 
-ac_config_files="$ac_config_files Makefile tests/Makefile src/Makefile src/exchanges/Makefile examples/Makefile examples/tests/Makefile"
+ac_config_files="$ac_config_files Makefile lib/Makefile lib/proxygen/Makefile lib/openrtb/Makefile lib/openrtb/tests/Makefile tests/Makefile src/Makefile src/exchanges/Makefile examples/Makefile examples/tests/Makefile"
 
 
 ##########################################################################
@@ -17203,6 +17204,10 @@ do
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+    "lib/Makefile") CONFIG_FILES="$CONFIG_FILES lib/Makefile" ;;
+    "lib/proxygen/Makefile") CONFIG_FILES="$CONFIG_FILES lib/proxygen/Makefile" ;;
+    "lib/openrtb/Makefile") CONFIG_FILES="$CONFIG_FILES lib/openrtb/Makefile" ;;
+    "lib/openrtb/tests/Makefile") CONFIG_FILES="$CONFIG_FILES lib/openrtb/tests/Makefile" ;;
     "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "src/exchanges/Makefile") CONFIG_FILES="$CONFIG_FILES src/exchanges/Makefile" ;;

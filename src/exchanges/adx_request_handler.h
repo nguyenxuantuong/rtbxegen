@@ -1,6 +1,7 @@
 #pragma once
 
 #include "exchange_request_handler.h"
+#include "realtime-bidding.pb.h"
 
 using namespace std;
 using namespace proxygen;

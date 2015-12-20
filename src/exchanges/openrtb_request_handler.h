@@ -29,7 +29,7 @@ public:
     virtual void onError(proxygen::ProxygenError err) noexcept override;
     virtual void onEOM() noexcept override;
 
-private:
+protected:
 
 };
 
