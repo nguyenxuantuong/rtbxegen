@@ -75,25 +75,55 @@ namespace rtbxegen {
     bool Device::deserialize(const folly::dynamic& jsonObj) {
         if(!jsonObj.isObject()) return false;
 
-        return json::deserialize<std::string>("ip", ip, jsonObj) &&
+        bool out = json::deserialize<std::string>("ip", ip, jsonObj) &&
                json::deserialize<std::string>("carrier", carrier, jsonObj) &&
                json::deserialize<std::string>("language", language, jsonObj) &&
                json::deserialize<std::string>("make", make, jsonObj) &&
                json::deserialize<std::string>("model", model, jsonObj) &&
                json::deserialize<std::string>("os", os, jsonObj) &&
-               json::deserialize<std::string>("osv", osv, jsonObj) &&
-               json::deserialize<rtbxegen::Geo>("geo", geo.get(), jsonObj);
+               json::deserialize<std::string>("osv", osv, jsonObj);
+
+        //only corresponding field exist; then we do deserialize
+        if(jsonObj.get_ptr("geo")) {
+            geo = Geo();
+            out = out && json::deserialize<rtbxegen::Geo>("geo", geo.get(), jsonObj);
+        }
+
+        return out;
     }
 
     //USER
     User::~User() { }
 
     bool User::deserialize(const folly::dynamic& jsonObj) {
-        return true;
+        if(!jsonObj.isObject()) return false;
+
+        bool out = json::deserialize<std::string>("id", id, jsonObj) &&
+                   json::deserialize<std::string>("buyeruid", buyeruid, jsonObj) &&
+                   json::deserialize<std::string>("gender", gender, jsonObj) &&
+                   json::deserialize<std::string>("customdata", customdata, jsonObj);
+
+        //only corresponding field exist; then we do deserialize
+        if(jsonObj.get_ptr("geo")) {
+            geo = Geo();
+            out = out && json::deserialize<rtbxegen::Geo>("geo", geo.get(), jsonObj);
+        }
+
+        return out;
     }
 
     folly::dynamic User::serialize() const {
-        return folly::dynamic::object();
+        folly::dynamic out = folly::dynamic::object();
+
+        json::serialize<std::string>("id", id, out);
+        json::serialize<std::string>("buyeruid", buyeruid, out);
+        json::serialize<std::string>("gender", gender, out);
+        json::serialize<std::string>("customdata", customdata, out);
+
+        //serialize using method overloading; so no need to use generic type <Geo> for instance
+        if(geo) json::serialize<rtbxegen::Geo>("geo", geo.get(), out);
+
+        return out;
     }
 
     //IMPRESSION
@@ -102,10 +132,16 @@ namespace rtbxegen {
     bool Impression::deserialize(const folly::dynamic& jsonObj) {
         if(!jsonObj.isObject()) return false;
 
-        return json::deserialize<std::string>("id", id, jsonObj) &&
+        bool out = json::deserialize<std::string>("id", id, jsonObj) &&
                json::deserialize<std::string>("bidfloorcur", bidfloorcur, jsonObj) &&
-               json::deserialize<double>("bidfloor", bidfloor, jsonObj) &&
-               json::deserialize<rtbxegen::Serializable>("banner", banner.get(), jsonObj);
+               json::deserialize<double>("bidfloor", bidfloor, jsonObj);
+
+        if(jsonObj.get_ptr("banner")) {
+            banner = Banner();
+            out = out && json::deserialize<rtbxegen::Serializable>("banner", banner.get(), jsonObj);
+        }
+
+        return out;
     }
 
     folly::dynamic Impression::serialize() const {
@@ -130,6 +166,7 @@ namespace rtbxegen {
         json::serialize<int>("hmax", hmax, out);
         json::serialize<int>("hmin", hmin, out);
         json::serialize<int>("wmin", wmin, out);
+        json::serialize<int>("pos", pos, out);
 
         //width and height need to be handled slightly different
         if(w.size() > 1) {
@@ -155,7 +192,8 @@ namespace rtbxegen {
                json::deserialize<int>("wmax", wmax, jsonObj) &&
                json::deserialize<int>("hmax", hmax, jsonObj) &&
                json::deserialize<int>("wmin", wmin, jsonObj) &&
-               json::deserialize<int>("hmin", hmin, jsonObj);
+               json::deserialize<int>("hmin", hmin, jsonObj) &&
+               json::deserialize<int>("pos", pos, jsonObj);
 
         //width and height need to be handle differently
         dynamic wDynamic = jsonObj.at("w");
@@ -178,26 +216,112 @@ namespace rtbxegen {
         return out;
     }
 
+    //Publisher
+    Publisher::~Publisher() { }
+
+    bool Publisher::deserialize(const folly::dynamic& jsonObj) {
+        if(!jsonObj.isObject()) return false;
+
+        return json::deserialize<std::string>("id", id, jsonObj) &&
+               json::deserialize<std::string>("name", name, jsonObj) &&
+               json::deserialize<std::string>("domain", domain, jsonObj) &&
+               json::deserialize<std::string>("cat", cat, jsonObj);
+    }
+
+    folly::dynamic Publisher::serialize() const {
+        folly::dynamic out = folly::dynamic::object();
+
+        json::serialize<std::string>("id", id, out);
+        json::serialize<std::string>("name", name, out);
+        json::serialize<std::string>("domain", domain, out);
+        json::serialize<std::string>("cat", cat, out);
+
+        return out;
+    }
+
     //APP
     App::~App() { }
 
     bool App::deserialize(const folly::dynamic& jsonObj) {
-        return true;
+        if(!jsonObj.isObject()) return false;
+
+        bool out = json::deserialize<std::string>("id", id, jsonObj) &&
+               json::deserialize<std::string>("name", name, jsonObj) &&
+               json::deserialize<std::string>("domain", domain, jsonObj) &&
+               json::deserialize<std::string>("cat", cat, jsonObj);
+
+        if(jsonObj.get_ptr("publisher")) {
+            publisher = Publisher();
+            out = out && json::deserialize<Publisher>("publisher", publisher.get(), jsonObj);
+        }
+
+        return out;
     }
 
     folly::dynamic App::serialize() const {
-        return folly::dynamic::object();
+        folly::dynamic out = folly::dynamic::object();
+
+        json::serialize<std::string>("id", id, out);
+        json::serialize<std::string>("name", name, out);
+        json::serialize<std::string>("domain", domain, out);
+        json::serialize<std::string>("cat", cat, out);
+
+        if(publisher){
+            json::serialize<Publisher>("publisher", publisher.get(), out);
+        }
+
+        return out;
     }
 
     //BID REQUEST
     BidRequest::~BidRequest() { }
 
     bool BidRequest::deserialize(const folly::dynamic& jsonObj) {
-        return true;
+        if(!jsonObj.isObject()) return false;
+
+        bool out = json::deserialize<std::string>("id", id, jsonObj) &&
+                   json::deserialize<std::string>("cur", cur, jsonObj) &&
+                   json::deserialize<std::string>("badv", badv, jsonObj) &&
+                   json::deserialize<Impression>("imp", imp, jsonObj);
+
+        if(jsonObj.get_ptr("site")) {
+            site = Site();
+            out = out && json::deserialize<Site>("site", site.get(), jsonObj);
+        }
+
+        if(jsonObj.get_ptr("app")) {
+            app = App();
+            out = out && json::deserialize<App>("app", app.get(), jsonObj);
+        }
+
+        if(jsonObj.get_ptr("device")) {
+            device = Device();
+            out = out && json::deserialize<Device>("device", device.get(), jsonObj);
+        }
+
+        if(jsonObj.get_ptr("user")) {
+            user = User();
+            out = out && json::deserialize<User>("user", user.get(), jsonObj);
+        }
+
+        return out;
     }
 
     folly::dynamic BidRequest::serialize() const {
-        return folly::dynamic::object();
+        folly::dynamic out = folly::dynamic::object();
+
+        json::serialize<std::string>("id", id, out);
+        json::serialize<std::string>("cur", cur, out);
+        json::serialize<std::string>("badv", badv, out);
+        json::serialize<Impression>("imp", imp, out);
+
+        // serialize
+        if(site) json::serialize<Site>("site", site.get(), out);
+        if(app) json::serialize<App>("app", app.get(), out);
+        if(device) json::serialize<Device>("device", device.get(), out);
+        if(user) json::serialize<User>("user", user.get(), out);
+
+        return out;
     }
 }
 

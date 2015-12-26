@@ -39,8 +39,8 @@ TEST(OpenRTB, GeoTest) {
     Geo geo;
     geo.deserialize(geoObj);
 
-    EXPECT_EQ(geo.zip, geoObj.at("zip").asString().toStdString());
-    EXPECT_EQ(geo.country, geoObj.at("country").asString().toStdString());
+    EXPECT_EQ(geo.zip.get(), geoObj.at("zip").asString().toStdString());
+    EXPECT_EQ(geo.country.get(), geoObj.at("country").asString().toStdString());
 
     dynamic serializedObj = dynamic::object
             ("country","USA")
@@ -81,12 +81,13 @@ TEST(OpenRTB, DeviceTest) {
 
     std::function<void()> checkFunction = [&](){
         EXPECT_EQ(device.ip, deviceObj.at("ip").asString().toStdString());
-        EXPECT_EQ(device.language, deviceObj.at("language").asString().toStdString());
-        EXPECT_EQ(device.carrier, deviceObj.at("carrier").asString().toStdString());
-        EXPECT_EQ(device.model, deviceObj.at("model").asString().toStdString());
-        EXPECT_EQ(device.os, deviceObj.at("os").asString().toStdString());
-        EXPECT_EQ(device.osv, deviceObj.at("osv").asString().toStdString());
-        EXPECT_EQ(device.make, deviceObj.at("make").asString().toStdString());
+
+        EXPECT_EQ(device.language.get(), deviceObj.at("language").asString().toStdString());
+        EXPECT_EQ(device.carrier.get(), deviceObj.at("carrier").asString().toStdString());
+        EXPECT_EQ(device.model.get(), deviceObj.at("model").asString().toStdString());
+        EXPECT_EQ(device.os.get(), deviceObj.at("os").asString().toStdString());
+        EXPECT_EQ(device.osv.get(), deviceObj.at("osv").asString().toStdString());
+        EXPECT_EQ(device.make.get(), deviceObj.at("make").asString().toStdString());
 
         //geo
         EXPECT_EQ(device.geo.get().city, deviceObj.at("geo").at("city").asString().toStdString());
@@ -148,19 +149,80 @@ TEST(OpenRTB, BannerTest) {
 TEST(OpenRTB, ImpressionTest) {
     dynamic impressionObj = parseJson(readFile("testdata/impression.json"));
 
-    Banner banner;
-
     Impression imp;
     imp.deserialize(impressionObj);
 
     std::function<void()> checkFunction = [&](){
         EXPECT_EQ(imp.id, impressionObj.at("id").asString().toStdString());
-        EXPECT_EQ(imp.bidfloor, impressionObj.at("bidfloor").asDouble());
-//        EXPECT_EQ(imp.banner.get().serialize(), impressionObj.at("banner"));
+        EXPECT_EQ(imp.bidfloor.get(), impressionObj.at("bidfloor").asDouble());
+        EXPECT_EQ(imp.banner.get().serialize(), impressionObj.at("banner"));
     };
 
     checkFunction();
 
     impressionObj = imp.serialize();
+    checkFunction();
+}
+
+
+TEST(OpenRTB, AppTest) {
+    dynamic appObj = parseJson(readFile("testdata/app.json"));
+
+    App app;
+    app.deserialize(appObj);
+
+    std::function<void()> checkFunction = [&](){
+        EXPECT_EQ(app.id, appObj.at("id").asString().toStdString());
+        EXPECT_EQ(app.name.get(), appObj.at("name").asString().toStdString());
+
+        dynamic catArr = {};
+        for(auto elem : app.cat.get()) {
+            catArr.push_back(elem);
+        }
+
+        EXPECT_EQ(catArr, appObj.at("cat"));
+
+        EXPECT_EQ(app.publisher.get().id, appObj.at("publisher").at("id").asString().toStdString());
+        EXPECT_EQ(app.publisher.get().domain, appObj.at("publisher").at("domain").asString().toStdString());
+        EXPECT_EQ(app.publisher.get().name, appObj.at("publisher").at("name").asString().toStdString());
+    };
+
+    checkFunction();
+
+    appObj = app.serialize();
+    checkFunction();
+}
+
+template<typename T>
+void compare(vector<T> vect, dynamic obj) {
+    dynamic array = {};
+
+    for(auto elem : vect) {
+        array.push_back(elem);
+    }
+
+    EXPECT_EQ(array, obj);
+}
+
+TEST(OpenRTB, BidRequestTest) {
+    dynamic breqObj = parseJson(readFile("testdata/breq.banner.json"));
+
+    BidRequest breq;
+    breq.deserialize(breqObj);
+
+    std::function<void()> checkFunction = [&](){
+        EXPECT_EQ(breq.id, breqObj.at("id").asString().toStdString());
+        EXPECT_EQ(breq.device.get().ip, breqObj.at("device").at("ip").asString().toStdString());
+        EXPECT_EQ(breq.imp[0].banner.get().w[0], breqObj.at("imp")[0].at("banner").at("w").asInt());
+        EXPECT_EQ(breq.imp[0].banner.get().h[0], breqObj.at("imp")[0].at("banner").at("h").asInt());
+        EXPECT_EQ(breq.user.get().id, breqObj.at("user").at("id").asString().toStdString());
+        EXPECT_EQ(breq.user.get().buyeruid, breqObj.at("user").at("buyeruid").asString().toStdString());
+        compare<std::string>(breq.badv.get(), breqObj.at("badv"));
+        compare<std::string>(breq.site.get().cat.get(), breqObj.at("site").at("cat"));
+    };
+
+    checkFunction();
+
+    breqObj = breq.serialize();
     checkFunction();
 }

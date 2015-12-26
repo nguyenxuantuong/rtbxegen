@@ -22,14 +22,12 @@ using namespace folly;
 namespace rtbxegen {
     struct Site : public Serializable {
         ~Site();
-        Site() {
-
-        }
+        Site() {}
 
         std::string id;
         std::string page;
 
-        //optinal fields
+        //optional fields
         boost::optional<std::string> name;
         boost::optional<std::string> domain;
         boost::optional<vector<std::string>> cat;
@@ -40,16 +38,13 @@ namespace rtbxegen {
 
     struct Geo : public Serializable {
         ~Geo();
-        Geo() {
+        Geo() {}
 
-        }
-
-        std::string country;
-        std::string region;
-        std::string metro;
-
-        std::string city;
-        std::string zip;
+        boost::optional<std::string> country;
+        boost::optional<std::string> region;
+        boost::optional<std::string> metro;
+        boost::optional<std::string> city;
+        boost::optional<std::string> zip;
 
         virtual folly::dynamic serialize() const;
         virtual bool deserialize(const folly::dynamic& );
@@ -57,19 +52,17 @@ namespace rtbxegen {
 
     struct Device : public Serializable {
         ~Device();
-        Device() {
-            geo = Geo();
-        }
+        Device() { }
 
         std::string ip;
         boost::optional<Geo> geo;
 
-        std::string carrier;
-        std::string language;
-        std::string make;
-        std::string model;
-        std::string os;
-        std::string osv;
+        boost::optional<std::string> carrier;
+        boost::optional<std::string> language;
+        boost::optional<std::string> make;
+        boost::optional<std::string> model;
+        boost::optional<std::string> os;
+        boost::optional<std::string> osv;
 
         virtual folly::dynamic serialize() const;
         virtual bool deserialize(const folly::dynamic& );
@@ -83,11 +76,13 @@ namespace rtbxegen {
         //adx sent multiple size in the banner object; so it need to be vector here
         vector<int> w;
         vector<int> h;
-        int wmax = 0;
-        int hmax = 0;
-        int wmin = 0;
-        int hmin = 0;
-        std::string id = "";
+        std::string id;
+
+        boost::optional<int> wmax;
+        boost::optional<int> hmax;
+        boost::optional<int> wmin;
+        boost::optional<int> hmin;
+        boost::optional<int> pos;
 
         folly::dynamic ext = dynamic::object();
 
@@ -103,9 +98,12 @@ namespace rtbxegen {
         }
 
         std::string id;
+
         boost::optional<Banner> banner;
-        double bidfloor = 0;
-        std::string bidfloorcur;
+
+        boost::optional<double> bidfloor;
+        boost::optional<std::string> bidfloorcur;
+
         folly::dynamic ext = dynamic::object();;
 
         virtual folly::dynamic serialize() const;
@@ -115,16 +113,29 @@ namespace rtbxegen {
 
     struct User : public Serializable {
         ~User();
-        User() {
-            geo = Geo();
-        }
+        User() {}
 
         std::string id;
         std::string buyeruid;
-        std::string gender;
-        std::string customdata;
+
+        boost::optional<std::string> gender;
+        boost::optional<std::string> customdata;
         boost::optional<Geo> geo;
+
         folly::dynamic ext = dynamic::object();
+
+        virtual folly::dynamic serialize() const;
+        virtual bool deserialize(const folly::dynamic& );
+    };
+
+    struct Publisher : public Serializable {
+        ~Publisher();
+        Publisher(){};
+
+        std::string id;
+        boost::optional<std::string> name;
+        boost::optional<std::string> domain;
+        boost::optional<vector<std::string>> cat;
 
         virtual folly::dynamic serialize() const;
         virtual bool deserialize(const folly::dynamic& );
@@ -134,6 +145,13 @@ namespace rtbxegen {
         ~App();
         App(){}
 
+        std::string id;
+        boost::optional<std::string> name;
+        boost::optional<std::string> domain;
+        boost::optional<vector<std::string>> cat;
+
+        boost::optional<Publisher> publisher;
+
         virtual folly::dynamic serialize() const;
         virtual bool deserialize(const folly::dynamic& );
     };
@@ -141,10 +159,6 @@ namespace rtbxegen {
     struct BidRequest : public Serializable {
         ~BidRequest();
         BidRequest() {
-            app = App();
-            site = Site();
-            device = Device();
-            user = User();
         }
 
         std::string id;
@@ -155,13 +169,13 @@ namespace rtbxegen {
         boost::optional<Device> device;
         boost::optional<User> user;
 
-        std::vector<string> cur;
-        std::vector<string> badv;
+        boost::optional<std::vector<string>> cur;
+        boost::optional<std::vector<string>> badv;
 
         folly::dynamic ext = dynamic::object();
         folly::dynamic unparseable = dynamic::object();
 
-        virtual folly::dynamic serialize() const = 0;
-        virtual bool deserialize(const folly::dynamic& ) = 0;
+        virtual folly::dynamic serialize() const;
+        virtual bool deserialize(const folly::dynamic& );
     };
 }

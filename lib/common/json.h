@@ -20,9 +20,6 @@ namespace rtbxegen {
     };
 
     namespace json {
-//        void serialize(std::string fieldName, const Serializable& structField, folly::dynamic& out);
-//        void serialize(std::string fieldName, const vector<Serializable>& structField, folly::dynamic& out);
-
         //T (std::string + arithmetic + Serializable)
         template<typename T,
                 typename std::enable_if<
