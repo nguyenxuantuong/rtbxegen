@@ -7,8 +7,9 @@ openrtb_test_SOURCES = \
 	openrtb_test.cpp
 
 openrtb_test_LDADD = \
-    ../libopenrtb_proxygen.la \
-	../../../tests/libtestmain.la \
+    ../../../tests/libtestmain.la \
+    ../libopenrtb_rtbxegen.la \
+    ../../common/libcommon_rtbxegen.la \
 	-lpthread -lproxygenhttpserver -lfolly -lglog -lgflags
 
 TESTS = openrtb_test

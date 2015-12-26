@@ -16058,7 +16058,7 @@ $as_echo "yes" >&6; }
 
 fi
 
-ac_config_files="$ac_config_files Makefile lib/Makefile lib/proxygen/Makefile lib/openrtb/Makefile lib/openrtb/tests/Makefile tests/Makefile src/Makefile src/exchanges/Makefile examples/Makefile examples/tests/Makefile"
+ac_config_files="$ac_config_files Makefile lib/Makefile lib/common/Makefile lib/proxygen/Makefile lib/openrtb/Makefile lib/openrtb/tests/Makefile tests/Makefile src/Makefile src/exchanges/Makefile examples/Makefile examples/tests/Makefile"
 
 
 ##########################################################################
@@ -17205,6 +17205,7 @@ do
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "lib/Makefile") CONFIG_FILES="$CONFIG_FILES lib/Makefile" ;;
+    "lib/common/Makefile") CONFIG_FILES="$CONFIG_FILES lib/common/Makefile" ;;
     "lib/proxygen/Makefile") CONFIG_FILES="$CONFIG_FILES lib/proxygen/Makefile" ;;
     "lib/openrtb/Makefile") CONFIG_FILES="$CONFIG_FILES lib/openrtb/Makefile" ;;
     "lib/openrtb/tests/Makefile") CONFIG_FILES="$CONFIG_FILES lib/openrtb/tests/Makefile" ;;

@@ -1,8 +1,8 @@
 SUBDIRS = .
 
-noinst_LTLIBRARIES = librtbproxygen.la
+noinst_LTLIBRARIES = libproxygen_rtbxegen.la
 
-librtbproxygen_la_SOURCES = \
+libproxygen_rtbxegen_la_SOURCES = \
     rejection_request_handler.cpp
 
-librtbproxygen_la_LIBADD = -lproxygenhttpserver -lfolly
+libproxygen_rtbxegen_la_LIBADD = -lproxygenhttpserver -lfolly

@@ -18,3 +18,9 @@ autom4te.cache
 build-aux
 libtool
 CMakeLists.txt
+lib/openrtb/tests/openrtb_test
+src/exchanges/rtbxegen_exchange_runner
+tests/hello_test
+examples/tests/mock_http_server_test
+examples/mock_http_server
+config.h*

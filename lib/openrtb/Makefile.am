@@ -1,8 +1,8 @@
 SUBDIRS = . tests
 
-noinst_LTLIBRARIES = libopenrtb_proxygen.la
+noinst_LTLIBRARIES = libopenrtb_rtbxegen.la
 
-libopenrtb_proxygen_la_SOURCES = \
+libopenrtb_rtbxegen_la_SOURCES = \
     openrtb.cpp
 
-libopenrtb_proxygen_la_LIBADD = -lfolly
+libopenrtb_rtbxegen_la_LIBADD = -lfolly

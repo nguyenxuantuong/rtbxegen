@@ -58,6 +58,7 @@ PKG_CHECK_MODULES([protobuf], [protobuf])
 AC_CONFIG_FILES([
  Makefile
  lib/Makefile
+ lib/common/Makefile
  lib/proxygen/Makefile
  lib/openrtb/Makefile
  lib/openrtb/tests/Makefile

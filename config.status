@@ -393,7 +393,7 @@ on `(hostname || uname -n) 2>/dev/null | sed 1q`
 "
 
 # Files that config.status was made for.
-config_files=" Makefile lib/Makefile lib/proxygen/Makefile lib/openrtb/Makefile lib/openrtb/tests/Makefile tests/Makefile src/Makefile src/exchanges/Makefile examples/Makefile examples/tests/Makefile"
+config_files=" Makefile lib/Makefile lib/common/Makefile lib/proxygen/Makefile lib/openrtb/Makefile lib/openrtb/tests/Makefile tests/Makefile src/Makefile src/exchanges/Makefile examples/Makefile examples/tests/Makefile"
 config_headers=" config.h"
 config_commands=" depfiles libtool"
 
@@ -805,6 +805,7 @@ do
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "lib/Makefile") CONFIG_FILES="$CONFIG_FILES lib/Makefile" ;;
+    "lib/common/Makefile") CONFIG_FILES="$CONFIG_FILES lib/common/Makefile" ;;
     "lib/proxygen/Makefile") CONFIG_FILES="$CONFIG_FILES lib/proxygen/Makefile" ;;
     "lib/openrtb/Makefile") CONFIG_FILES="$CONFIG_FILES lib/openrtb/Makefile" ;;
     "lib/openrtb/tests/Makefile") CONFIG_FILES="$CONFIG_FILES lib/openrtb/tests/Makefile" ;;

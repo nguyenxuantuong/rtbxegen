@@ -1,1 +1,1 @@
-SUBDIRS = . openrtb proxygen
+SUBDIRS = . common openrtb proxygen
